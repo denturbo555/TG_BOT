@@ -5,37 +5,48 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import CommandStart
 from config import TOKEN_BOT
 
+# Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
-) #Логирование🤷‍♂️
+)
 
+# Токен бота
 TOKEN = TOKEN_BOT
 
-bot = Bot(token=TOKEN) #токен бота
-dp = Dispatcher()
+# Создаем бота и диспетчер
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
 
+# Клавиатура с кнопкой "Привет"
 keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="Привет")]
     ],
     resize_keyboard=True
-) #Кнопка пользователя "Привет"
+)
 
+# Хэндлер на команду /start
 @dp.message(CommandStart())
 async def start_handler(message: types.Message):
     await message.answer(
-        "Привет бот работает 👍🐧🐥🐤🦉🪸",
+        "Привет! Бот работает 👍🐧🐥🐤🦉🪸",
         reply_markup=keyboard
     )
 
+# Хэндлер на кнопку "Привет"
 @dp.message(F.text == "Привет")
 async def hello_button(message: types.Message):
-    await message.answer(("Привет!"))
+    await message.answer("Привет!")
 
+# Главная функция запуска
 async def main():
-    print("Бот запущен👍🐧😂🐤🤣🪸😒😍😊❤️🐥🦉")
-    await dp.start_polling(bot)
+    logging.info("Бот запущен ✅")
+    try:
+        await dp.start_polling()
+    finally:
+        await bot.session.close()
 
-if __name__ == "__main__":
+# Запуск бота
+if name == "main":
     asyncio.run(main())
